@@ -3,13 +3,17 @@
 
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
+  <link rel="stylesheet" href="custom.css">
 </head>
 
-<body>
+<body onload="initialize()">
   <div class="container-fluid">
     <div class="row">
       <h1 class="text-center"> PartyMap </h1>
+    </div>
+    <div class="row">
+      <div id="current" class="text-center">Initializing...</div>
+      <div id="map_canvas" class="center"></div>
     </div>
   </div>
   <script src="js/geoPosition.js" type="text/javascript" charset="utf-8"></script>

@@ -1,6 +1,6 @@
-function initialiseMap()
+function initialize()
 {
-  var myOptions = {
+    var myOptions = {
     zoom: 4,
     mapTypeControl: true,
     mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
@@ -9,9 +9,7 @@ function initialiseMap()
     mapTypeId: google.maps.MapTypeId.ROADMAP      
   } 
   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-}
-function initialise()
-{
+  google.maps.event.addDomListener(window, 'resize', initialize);
   if(geoPosition.init())
   {
     document.getElementById('current').innerHTML="Receiving...";
@@ -33,7 +31,7 @@ function showPosition(p)
   map.setZoom(14);
 
   var infowindow = new google.maps.InfoWindow({
-    content: "<strong>yes</strong>"
+    content: "<strong>Current Location</strong>"
   });
 
   var marker = new google.maps.Marker({
@@ -45,5 +43,4 @@ function showPosition(p)
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.open(map,marker);
   });
-
 }
