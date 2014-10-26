@@ -5,12 +5,13 @@ var fb = new Firebase("https://blinding-torch-598.firebaseio.com/");
 
 //Read parties in Firebase
 function viewParties() {
+  var allParties;
   fb.on("value", function(snapshot) {
-    console.log(snapshot.val());
-
+    allParties = snapshot.val();
   }, function(error){
     console.log("There was an error displaying: " + error.code);
   });
+  return allParties;
 }
 
 // Get form data
@@ -49,9 +50,9 @@ function addParty(data) {
   },
   function(error) {
     if (error) {
-      alert("Data couldn't be saved! Error: " + error);
+      alert("Party couldn't be saved! Error: " + error);
     } else {
-      alert("Data saved successfully!");
+      alert("Party added succesfully!");
     }
   });
 
@@ -59,7 +60,6 @@ function addParty(data) {
 
 //Edit an existing party in Firebase
 function editParty(partyID) {
-  getFormData();
   var party = fb.child(partyID);
   party.update({
     partyName: $name,
