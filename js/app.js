@@ -3,16 +3,19 @@
 // Firebase DB connection 
 var fb = new Firebase("https://blinding-torch-598.firebaseio.com/");
 
-//Read parties in Firebase
-function viewParties() {
-  var allParties;
-  fb.on("value", function(snapshot) {
-    allParties = snapshot.val();
-  }, function(error){
-    console.log("There was an error displaying: " + error.code);
+//Display all parties in Firebase
+function showParties() {
+  //Limits query to ten items
+  var parties = fb.limit(10);
+  var def = $.Deferred(); // <--- jQuery handles deferred/async/promise functions
+    
+  parties.on('value', function(snapshot) {
+    var partyInfo = snapshot.val();
+    def.resolve(partyInfo);
   });
-  return allParties;
+  return def.promise();
 }
+
 
 // Get form data
 function getFormData() {
@@ -81,6 +84,13 @@ function editParty(partyID) {
     }
   });
 }
+
+//TODO: Destroy invalid or expired parties
+
+
+
+
+
 
 // GEOLOCATION & GOOGLE MAP =====================================================================
 function initialize()
