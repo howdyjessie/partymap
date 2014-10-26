@@ -97,7 +97,11 @@ function initialize()
   google.maps.event.addDomListener(window, 'resize', initialize);
   if(geoPosition.init())
   {
-    document.getElementById('current').innerHTML="Receiving...";
+    var current = document.getElementById("current");
+    current.innerHTML="Retrieving...";
+    var img = document.createElement("img");
+    img.src = "cat.gif";
+    document.getElementById("map_canvas").appendChild(img);
     geoPosition.getCurrentPosition(showPosition,function(){document.getElementById('current').innerHTML="Couldn't get location"},{enableHighAccuracy:true});
   }
   else
