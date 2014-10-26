@@ -22,8 +22,8 @@ function updateMap() {
       var obj = result[entry];
       var location = obj.location;
       var address = location.street + " " + location.city + " " + location.state + " " + location.zip;
-      var contentString = "Event: " + obj.partyName + " Address: " + address + " Cost: $" + obj.cost
-      + " Url: " + obj.url;
+      var contentString = "<strong>Event:</strong> " + obj.partyName + "<br><strong>Address:</strong> " + address + "<br><strong>Cost:</strong> $" + obj.cost
+      + "<br><strong>URL:</strong> <a href='" + obj.url + "'>" + obj.url + "</a>";
       geocodeData(contentString, address);
     }
   });
@@ -105,6 +105,8 @@ function editParty(partyID) {
 
 
 // GEOLOCATION & GOOGLE MAP =====================================================================
+var infowindow = new google.maps.InfoWindow();
+
 function initialize()
 {
     var myOptions = {
@@ -144,10 +146,6 @@ function showPosition(p)
   map.setCenter(pos);
   map.setZoom(14);
 
-  var infowindow = new google.maps.InfoWindow({
-    content: "<strong>Current Location</strong>"
-  });
-
   var marker = new google.maps.Marker({
     position: pos,
     map: map,
@@ -156,7 +154,8 @@ function showPosition(p)
   });
 
   google.maps.event.addListener(marker, 'click', function() {
-    infowindow.open(map,marker);
+    infowindow.setContent("<strong>Current Location</strong>");
+    infowindow.open(map, this);
   });
   updateMap();
 }
@@ -179,14 +178,12 @@ function getReverseGeocodingData(latLng, fn) {
 
 // Plots a marker w/ info window given a human-friendly address
 function geocodeData(contentString, address) {
-  var infowindow = new google.maps.InfoWindow({
-    content: contentString
-  });
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode( { 'address': address}, function (results, status) {
      if (status == google.maps.GeocoderStatus.OK) {
         var marker = new google.maps.Marker({map: map, position: results[0].geometry.location });
         google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(contentString);
           infowindow.open(map, this);
         });
      } else {
