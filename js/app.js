@@ -16,6 +16,18 @@ function showParties() {
   return def.promise();
 }
 
+function updateMap() {
+  showParties().done(function(result) {
+    for(entry in result){
+      var obj = result[entry];
+      var location = obj.location;
+      var address = location.street + " " + location.city + " " + location.state + " " + location.zip;
+      var contentString = "Event: " + obj.partyName + " Address: " + address + " Cost: $" + obj.cost
+      + " Url: " + obj.url;
+      geocodeData(contentString, address);
+    }
+  });
+}
 
 // Get form data
 function getFormData() {
@@ -139,12 +151,14 @@ function showPosition(p)
   var marker = new google.maps.Marker({
     position: pos,
     map: map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
     title:"You are here"
   });
 
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.open(map,marker);
   });
+  updateMap();
 }
 
 function getReverseGeocodingData(latLng, fn) {
