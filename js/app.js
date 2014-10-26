@@ -144,7 +144,7 @@ function showPosition(p)
   });
   
   map.setCenter(pos);
-  map.setZoom(14);
+  map.setZoom(15);
 
   var marker = new google.maps.Marker({
     position: pos,
@@ -164,14 +164,12 @@ function getReverseGeocodingData(latLng, fn) {
   //making the Geocode request
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({ 'latLng': latLng}, function (results, status) {
-    if (status !== google.maps.GeocoderStatus.OK) {
-      alert(status);
-    }
-
     // checking if the Geocode status is ok before proceeding
     if (status == google.maps.GeocoderStatus.OK) {
       console.log(results[0].formatted_address);
       fn(results[0].formatted_address);
+    } else {
+        console.log("Reverse geocode was not successful for the following reason: " + status);
     }
   });
 }
@@ -186,7 +184,12 @@ function geocodeData(contentString, address) {
           infowindow.setContent(contentString);
           infowindow.open(map, this);
         });
-     } else {
+     } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+      setTimeout(function() {
+        console.log("Retrying");
+        geocodeData(contentString, address);
+      }, 200);
+    } else {
         console.log("Geocode was not successful for the following reason: " + status);
      }
   });
