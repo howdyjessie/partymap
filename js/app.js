@@ -163,22 +163,20 @@ function getReverseGeocodingData(latLng, fn) {
   });
 }
 
-// Plots a marker given a human-friendly address
-function geocodeData(address) {
+// Plots a marker w/ info window given a human-friendly address
+function geocodeData(contentString, address) {
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode( { 'address': address}, function (results, status) {
      if (status == google.maps.GeocoderStatus.OK) {
         var marker = new google.maps.Marker({map: map, position: results[0].geometry.location });
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open(map,marker);
+        });
      } else {
         console.log("Geocode was not successful for the following reason: " + status);
      }
   });
-}
-
-// Places markers on map via party
-function mapParties(data) { 
-  for (i = 0; i < data.length; i++) {
-    var address = data[i].street + data[i].city + data[i].state + data[i].zip;
-    geocodeData(address);
-  }
 }
