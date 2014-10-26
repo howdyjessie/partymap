@@ -61,7 +61,7 @@ function addParty(data) {
 
 }
 
-//Edit an existing party in Firebase
+//TODO: Edit an existing party in Firebase
 function editParty(partyID) {
   var party = fb.child(partyID);
   party.update({
@@ -161,4 +161,24 @@ function getReverseGeocodingData(latLng, fn) {
       fn(results[0].formatted_address);
     }
   });
+}
+
+// Plots a marker given a human-friendly address
+function geocodeData(address) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode( { 'address': address}, function (results, status) {
+     if (status == google.maps.GeocoderStatus.OK) {
+        var marker = new google.maps.Marker({map: map, position: results[0].geometry.location });
+     } else {
+        console.log("Geocode was not successful for the following reason: " + status);
+     }
+  });
+}
+
+// Places markers on map via party
+function mapParties(data) { 
+  for (i = 0; i < data.length; i++) {
+    var address = data[i].street + data[i].city + data[i].state + data[i].zip;
+    geocodeData(address);
+  }
 }
