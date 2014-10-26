@@ -124,8 +124,11 @@ function showPosition(p)
 {
   var latitude = parseFloat( p.coords.latitude );
   var longitude = parseFloat( p.coords.longitude );
-  document.getElementById('current').innerHTML="latitude=" + latitude + " longitude=" + longitude;
-  var pos=new google.maps.LatLng( latitude , longitude);
+  var pos = new google.maps.LatLng( latitude , longitude);
+  getReverseGeocodingData(pos, function(location) {
+    document.getElementById('current').innerHTML="Current Location: " + location;
+  });
+  
   map.setCenter(pos);
   map.setZoom(14);
 
@@ -141,5 +144,21 @@ function showPosition(p)
 
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.open(map,marker);
+  });
+}
+
+function getReverseGeocodingData(latLng, fn) {
+  //making the Geocode request
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ 'latLng': latLng}, function (results, status) {
+    if (status !== google.maps.GeocoderStatus.OK) {
+      alert(status);
+    }
+
+    // checking if the Geocode status is ok before proceeding
+    if (status == google.maps.GeocoderStatus.OK) {
+      console.log(results[0].formatted_address);
+      fn(results[0].formatted_address);
+    }
   });
 }
