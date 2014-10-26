@@ -173,7 +173,7 @@ function geocodeData(contentString, address) {
      if (status == google.maps.GeocoderStatus.OK) {
         var marker = new google.maps.Marker({map: map, position: results[0].geometry.location });
         google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map,marker);
+          infowindow.open(map, this);
         });
      } else {
         console.log("Geocode was not successful for the following reason: " + status);
