@@ -14,27 +14,38 @@ function viewParties() {
 }
 
 // Get form data
-var $name = $("form[name='name']").val();
-var $street = $("form[name='street']").val();
-var $city = $("form[name='city']").val();
-var $state = $("form[name='state']").val();
-var $zip = $("form[name='zip']").val();
-var $cost = $("form[name='cost']").val();
-var $url = $("form[name='url']").val();
-
-//Add a party to Firebase
-function addParty() {
-  fb.push({
+function getFormData() {
+  var $name = $("input[name='name']").val();
+  var $street = $("input[name='street']").val();
+  var $city = $("input[name='city']").val();
+  var $state = $("input[name='state']").val();
+  var $zip = $("input[name='zip']").val();
+  var $cost = $("input[name='cost']").val();
+  var $url = $("input[name='url']").val();
+  
+  return {
     name: $name,
-    location: {
-      street: $street,
-      city: $city,
-      state: $state,
-      zip: $zip
-
-    },
+    street: $street,
+    city: $city,
+    state: $state,
+    zip: $zip,
     cost: $cost,
     url: $url
+  };
+}
+
+//Add a party to Firebase
+function addParty(data) {
+  fb.push({
+    partyName: data.name,
+    location: {
+      street: data.street,
+      city: data.city,
+      state: data.state,
+      zip: data.zip
+    },
+    cost: data.cost,
+    url: data.url
   },
   function(error) {
     if (error) {
@@ -48,9 +59,10 @@ function addParty() {
 
 //Edit an existing party in Firebase
 function editParty(partyID) {
+  getFormData();
   var party = fb.child(partyID);
   party.update({
-    name: $name,
+    partyName: $name,
     location: {
       street: $street,
       city: $city,
