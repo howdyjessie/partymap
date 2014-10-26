@@ -1,18 +1,72 @@
 // FIREBASE =====================================================================
+
+// Firebase DB connection 
 var fb = new Firebase("https://blinding-torch-598.firebaseio.com/");
 
+//Read parties in Firebase
+function viewParties() {
+  fb.on("value", function(snapshot) {
+    console.log(snapshot.val());
+
+  }, function(error){
+    console.log("There was an error displaying: " + error.code);
+  });
+}
+
+// Get form data
+var $name = $("form[name='name']").val();
+var $street = $("form[name='street']").val();
+var $city = $("form[name='city']").val();
+var $state = $("form[name='state']").val();
+var $zip = $("form[name='zip']").val();
+var $cost = $("form[name='cost']").val();
+var $url = $("form[name='url']").val();
+
+//Add a party to Firebase
 function addParty() {
   fb.push({
-    name: "Sigma Nu Rumble",
+    name: $name,
     location: {
-      street: "803 W. 30th St. Apt. 15",
-      city: "Los Angeles",
-      state: "California",
-      zip: 90007
+      street: $street,
+      city: $city,
+      state: $state,
+      zip: $zip
 
     },
-    cost: 5,
-    status: true,
+    cost: $cost,
+    url: $url
+  },
+  function(error) {
+    if (error) {
+      alert("Data couldn't be saved! Error: " + error);
+    } else {
+      alert("Data saved successfully!");
+    }
+  });
+
+}
+
+//Edit an existing party in Firebase
+function editParty(partyID) {
+  var party = fb.child(partyID);
+  party.update({
+    name: $name,
+    location: {
+      street: $street,
+      city: $city,
+      state: $state,
+      zip: $zip
+
+    },
+    cost: $cost,
+    url: $url
+  },
+  function(error) {
+    if (error) {
+      alert("Data couldn't be saved! Error: " + error);
+    } else {
+      alert("Data saved successfully!");
+    }
   });
 }
 
